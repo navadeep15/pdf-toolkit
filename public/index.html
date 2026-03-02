@@ -6,18 +6,54 @@
     <title>PDF Toolkit</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
+    <div class="bg-orb orb-a"></div>
+    <div class="bg-orb orb-b"></div>
     <main class="page">
       <section class="hero">
-        <p class="eyebrow">Local Processing</p>
-        <h1>PDF Toolkit</h1>
-        <p>
-          Merge, split, extract, rotate, convert, and package files with quality-first defaults.
-          Compression and password features only run when explicitly requested.
-        </p>
+        <div class="hero-title">
+          <p class="eyebrow">Local Processing</p>
+          <h1>PDF Toolkit</h1>
+          <p>
+            Smart workflows for PDF and image operations with quality-first defaults.
+            Compression and passwords are opt-in only.
+          </p>
+        </div>
+        <div class="hero-controls">
+          <label class="search-label" for="tool-search">Find a Tool</label>
+          <input id="tool-search" class="search-input" placeholder="Search merge, split, rotate, image..." />
+          <nav class="tool-nav" id="tool-nav">
+            <button class="tool-jump" type="button" data-target="tool-merge">Merge</button>
+            <button class="tool-jump" type="button" data-target="tool-split">Split</button>
+            <button class="tool-jump" type="button" data-target="tool-extract">Extract</button>
+            <button class="tool-jump" type="button" data-target="tool-rotate">Rotate</button>
+            <button class="tool-jump" type="button" data-target="tool-compress">Compress</button>
+            <button class="tool-jump" type="button" data-target="tool-security">Security</button>
+            <button class="tool-jump" type="button" data-target="tool-image-to-pdf">Images to PDF</button>
+            <button class="tool-jump" type="button" data-target="tool-pdf-to-images">PDF to Images</button>
+            <button class="tool-jump" type="button" data-target="tool-image-convert">Image Convert</button>
+          </nav>
+        </div>
+        <div class="hero-metrics">
+          <div class="metric">
+            <span id="selected-file-count">0</span>
+            <small>Files selected</small>
+          </div>
+          <div class="metric">
+            <span id="selected-total-size">0 MB</span>
+            <small>Total upload load</small>
+          </div>
+          <div class="metric">
+            <span>9</span>
+            <small>Ready tools</small>
+          </div>
+        </div>
       </section>
 
       <section id="status-panel" class="status status-sticky">
@@ -34,19 +70,21 @@
         </div>
       </section>
 
-      <section class="grid">
-        <article class="card">
+      <section class="workspace">
+        <section class="grid" id="tools-grid">
+        <article id="tool-merge" class="card tool-card" data-tool-name="merge pdf combine join files">
           <h2>Merge PDFs</h2>
           <form id="merge-form">
             <div class="drop-zone" data-zone="merge">Drop PDFs here or click to upload</div>
             <div class="help">Drag files in the list to reorder merge output pages.</div>
             <ul id="merge-list" class="file-list"></ul>
+            <p id="merge-stats" class="list-meta">No files selected.</p>
             <button id="merge-clear" class="secondary" type="button">Clear Merge List</button>
             <button type="submit">Merge</button>
           </form>
         </article>
 
-        <article class="card">
+        <article id="tool-split" class="card tool-card" data-tool-name="split pdf page ranges">
           <h2>Split PDF</h2>
           <form id="split-form">
             <div class="drop-zone" data-zone="split">Drop one PDF</div>
@@ -57,7 +95,7 @@
           </form>
         </article>
 
-        <article class="card">
+        <article id="tool-extract" class="card tool-card" data-tool-name="extract pages pdf selection">
           <h2>Extract Pages</h2>
           <form id="extract-form">
             <div class="drop-zone" data-zone="extract">Drop one PDF</div>
@@ -68,7 +106,7 @@
           </form>
         </article>
 
-        <article class="card">
+        <article id="tool-rotate" class="card tool-card" data-tool-name="rotate orientation pdf pages">
           <h2>Rotate Pages</h2>
           <form id="rotate-form">
             <div class="drop-zone" data-zone="rotate">Drop one PDF</div>
@@ -85,7 +123,7 @@
           </form>
         </article>
 
-        <article class="card">
+        <article id="tool-compress" class="card tool-card" data-tool-name="compress reduce size optional">
           <h2>Compress PDF (Optional)</h2>
           <form id="compress-form">
             <div class="drop-zone" data-zone="compress">Drop one PDF</div>
@@ -100,7 +138,7 @@
           </form>
         </article>
 
-        <article class="card">
+        <article id="tool-security" class="card tool-card" data-tool-name="password protect unlock security optional">
           <h2>Protect / Unlock (Optional)</h2>
           <form id="protect-form" class="subform">
             <div class="drop-zone" data-zone="protect">Drop one PDF (Protect)</div>
@@ -118,11 +156,12 @@
           </form>
         </article>
 
-        <article class="card">
+        <article id="tool-image-to-pdf" class="card tool-card" data-tool-name="image to pdf convert jpg png webp">
           <h2>Images to PDF</h2>
           <form id="image-to-pdf-form">
             <div class="drop-zone" data-zone="imageToPdf">Drop JPG, PNG, WEBP files</div>
             <div id="image-to-pdf-preview" class="preview-grid"></div>
+            <p id="image-to-pdf-stats" class="list-meta">No images selected.</p>
             <label class="inline">
               <input name="merge" type="checkbox" checked />
               Merge all images into one PDF
@@ -132,7 +171,7 @@
           </form>
         </article>
 
-        <article class="card">
+        <article id="tool-pdf-to-images" class="card tool-card" data-tool-name="pdf to images dpi png jpg">
           <h2>PDF to Images</h2>
           <form id="pdf-to-images-form">
             <div class="drop-zone" data-zone="pdfToImages">Drop one PDF</div>
@@ -152,11 +191,12 @@
           </form>
         </article>
 
-        <article class="card">
+        <article id="tool-image-convert" class="card tool-card" data-tool-name="image format conversion jpg png webp batch">
           <h2>Image Format Conversion</h2>
           <form id="image-convert-form">
             <div class="drop-zone" data-zone="imageConvert">Drop JPG, PNG, WEBP files</div>
             <div id="image-convert-preview" class="preview-grid"></div>
+            <p id="image-convert-stats" class="list-meta">No images selected.</p>
             <label>Format</label>
             <select name="format" required>
               <option value="jpg">JPG</option>
@@ -170,8 +210,21 @@
           </form>
         </article>
       </section>
+
+      <aside class="history-panel">
+        <div class="history-head">
+          <h2>Recent Outputs</h2>
+          <button id="clear-history-btn" class="secondary" type="button">Clear History</button>
+        </div>
+        <ul id="history-list" class="history-list">
+          <li class="history-empty">No outputs yet.</li>
+        </ul>
+      </aside>
+    </section>
     </main>
     <a id="floating-download" class="floating-download hidden" href="#" download>Download Ready</a>
+    <button id="floating-top" class="floating-top hidden" type="button">Top</button>
+    <div id="toast-root" class="toast-root"></div>
 
     <script src="/app.js"></script>
   </body>

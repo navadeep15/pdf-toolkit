@@ -1,0 +1,22 @@
+{
+  "name": "pdf-toolkit-web",
+  "version": "1.0.0",
+  "description": "Quality-preserving PDF and image processing toolkit",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "check": "node --check server.js"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.69",
+    "archiver": "^7.0.1",
+    "express": "^4.21.2",
+    "file-type": "^19.6.0",
+    "multer": "^2.0.2",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38",
+    "sharp": "^0.33.5",
+    "uuid": "^11.0.3"
+  }
+}

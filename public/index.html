@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Toolkit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <p class="eyebrow">Local Processing</p>
+        <h1>PDF Toolkit</h1>
+        <p>
+          Merge, split, extract, rotate, convert, and package files with quality-first defaults.
+          Compression and password features only run when explicitly requested.
+        </p>
+      </section>
+
+      <section id="status-panel" class="status status-sticky">
+        <div class="status-top">
+          <p id="status-operation" class="status-operation">No active task</p>
+          <button id="clear-result-btn" type="button" class="secondary hidden">Clear Result</button>
+        </div>
+        <div class="progress-wrap">
+          <div id="progress-bar" class="progress-bar"></div>
+        </div>
+        <p id="status-text">Ready.</p>
+        <div class="status-actions">
+          <a id="download-link" class="download hidden" href="#" download>Download Result</a>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>Merge PDFs</h2>
+          <form id="merge-form">
+            <div class="drop-zone" data-zone="merge">Drop PDFs here or click to upload</div>
+            <div class="help">Drag files in the list to reorder merge output pages.</div>
+            <ul id="merge-list" class="file-list"></ul>
+            <button id="merge-clear" class="secondary" type="button">Clear Merge List</button>
+            <button type="submit">Merge</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Split PDF</h2>
+          <form id="split-form">
+            <div class="drop-zone" data-zone="split">Drop one PDF</div>
+            <div id="split-preview" class="preview"></div>
+            <label>Ranges (example: 1-3,4-6)</label>
+            <input name="ranges" required placeholder="1-3,4-6" />
+            <button type="submit">Split</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Extract Pages</h2>
+          <form id="extract-form">
+            <div class="drop-zone" data-zone="extract">Drop one PDF</div>
+            <div id="extract-preview" class="preview"></div>
+            <label>Pages (example: 1,3,5-7)</label>
+            <input name="pages" required placeholder="1,3,5-7" />
+            <button type="submit">Extract</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Rotate Pages</h2>
+          <form id="rotate-form">
+            <div class="drop-zone" data-zone="rotate">Drop one PDF</div>
+            <div id="rotate-preview" class="preview"></div>
+            <label>Pages</label>
+            <input name="pages" required placeholder="1,2,8-10" />
+            <label>Angle</label>
+            <select name="angle" required>
+              <option value="90">90</option>
+              <option value="180">180</option>
+              <option value="270">270</option>
+            </select>
+            <button type="submit">Rotate</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Compress PDF (Optional)</h2>
+          <form id="compress-form">
+            <div class="drop-zone" data-zone="compress">Drop one PDF</div>
+            <div id="compress-preview" class="preview"></div>
+            <label>Compression level</label>
+            <select name="level" required>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+            <button type="submit">Compress</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Protect / Unlock (Optional)</h2>
+          <form id="protect-form" class="subform">
+            <div class="drop-zone" data-zone="protect">Drop one PDF (Protect)</div>
+            <div id="protect-preview" class="preview"></div>
+            <label>Password</label>
+            <input name="password" type="password" required />
+            <button type="submit">Protect PDF</button>
+          </form>
+          <form id="unlock-form" class="subform">
+            <div class="drop-zone" data-zone="unlock">Drop one PDF (Unlock)</div>
+            <div id="unlock-preview" class="preview"></div>
+            <label>Password</label>
+            <input name="password" type="password" required />
+            <button type="submit">Unlock PDF</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Images to PDF</h2>
+          <form id="image-to-pdf-form">
+            <div class="drop-zone" data-zone="imageToPdf">Drop JPG, PNG, WEBP files</div>
+            <div id="image-to-pdf-preview" class="preview-grid"></div>
+            <label class="inline">
+              <input name="merge" type="checkbox" checked />
+              Merge all images into one PDF
+            </label>
+            <button id="image-to-pdf-clear" class="secondary" type="button">Clear Images</button>
+            <button type="submit">Convert</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>PDF to Images</h2>
+          <form id="pdf-to-images-form">
+            <div class="drop-zone" data-zone="pdfToImages">Drop one PDF</div>
+            <div id="pdf-to-images-preview" class="preview"></div>
+            <label>Pages (optional)</label>
+            <input name="pages" placeholder="1,3,5-7" />
+            <label>DPI</label>
+            <input name="dpi" type="number" min="36" max="600" value="150" />
+            <label>Format</label>
+            <select name="format" required>
+              <option value="png">PNG</option>
+              <option value="jpg">JPG</option>
+            </select>
+            <label>JPG Quality</label>
+            <input name="quality" type="range" min="1" max="100" value="90" />
+            <button type="submit">Convert</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Image Format Conversion</h2>
+          <form id="image-convert-form">
+            <div class="drop-zone" data-zone="imageConvert">Drop JPG, PNG, WEBP files</div>
+            <div id="image-convert-preview" class="preview-grid"></div>
+            <label>Format</label>
+            <select name="format" required>
+              <option value="jpg">JPG</option>
+              <option value="png">PNG</option>
+              <option value="webp">WEBP</option>
+            </select>
+            <label>Quality (JPG/WEBP)</label>
+            <input name="quality" type="range" min="1" max="100" value="90" />
+            <button id="image-convert-clear" class="secondary" type="button">Clear Images</button>
+            <button type="submit">Convert</button>
+          </form>
+        </article>
+      </section>
+    </main>
+    <a id="floating-download" class="floating-download hidden" href="#" download>Download Ready</a>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

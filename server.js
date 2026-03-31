@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const path = require("path");
+const { pathToFileURL } = require("url");
 const os = require("os");
 const fs = require("fs");
 const fsp = require("fs/promises");
@@ -287,7 +288,11 @@ async function imageToSinglePagePdf(imagePath) {
 }
 
 async function loadPdfJs() {
-  return import("pdfjs-dist/legacy/build/pdf.mjs");
+  const pdfjsLib = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  pdfjsLib.GlobalWorkerOptions.workerSrc = pathToFileURL(
+    require.resolve("pdfjs-dist/legacy/build/pdf.worker.mjs")
+  ).href;
+  return pdfjsLib;
 }
 
 function makeImageName(original, pageNumber, format) {
@@ -644,7 +649,10 @@ app.post("/api/pdf/to-images", upload.single("file"), async (req, res) => {
 
     const pdfjsLib = await loadPdfJs();
     const pdfData = new Uint8Array(await fsp.readFile(filePath));
-    const loadingTask = pdfjsLib.getDocument({ data: pdfData });
+    const loadingTask = pdfjsLib.getDocument({
+      data: pdfData,
+      disableWorker: true
+    });
     const pdfDoc = await loadingTask.promise;
 
     const selectedIndices = req.body.pages

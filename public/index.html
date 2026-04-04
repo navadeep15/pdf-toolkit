@@ -22,7 +22,7 @@
           <h1>PDF Toolkit</h1>
           <p>
             Smart workflows for PDF and image operations with quality-first defaults.
-            Compression and passwords are opt-in only.
+            The toolset now only includes features that work in production.
           </p>
         </div>
         <div class="hero-controls">
@@ -33,8 +33,6 @@
             <button class="tool-jump" type="button" data-target="tool-split">Split</button>
             <button class="tool-jump" type="button" data-target="tool-extract">Extract</button>
             <button class="tool-jump" type="button" data-target="tool-rotate">Rotate</button>
-            <button class="tool-jump" type="button" data-target="tool-compress">Compress</button>
-            <button class="tool-jump" type="button" data-target="tool-security">Security</button>
             <button class="tool-jump" type="button" data-target="tool-image-to-pdf">Images to PDF</button>
             <button class="tool-jump" type="button" data-target="tool-pdf-to-images">PDF to Images</button>
             <button class="tool-jump" type="button" data-target="tool-image-convert">Image Convert</button>
@@ -50,7 +48,7 @@
             <small>Total upload load</small>
           </div>
           <div class="metric">
-            <span>9</span>
+            <span>7</span>
             <small>Ready tools</small>
           </div>
         </div>
@@ -120,39 +118,6 @@
               <option value="270">270</option>
             </select>
             <button type="submit">Rotate</button>
-          </form>
-        </article>
-
-        <article id="tool-compress" class="card tool-card" data-tool-name="compress reduce size optional">
-          <h2>Compress PDF (Optional)</h2>
-          <form id="compress-form">
-            <div class="drop-zone" data-zone="compress">Drop one PDF</div>
-            <div id="compress-preview" class="preview"></div>
-            <label>Compression level</label>
-            <select name="level" required>
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
-            <button type="submit">Compress</button>
-          </form>
-        </article>
-
-        <article id="tool-security" class="card tool-card" data-tool-name="password protect unlock security optional">
-          <h2>Protect / Unlock (Optional)</h2>
-          <form id="protect-form" class="subform">
-            <div class="drop-zone" data-zone="protect">Drop one PDF (Protect)</div>
-            <div id="protect-preview" class="preview"></div>
-            <label>Password</label>
-            <input name="password" type="password" required />
-            <button type="submit">Protect PDF</button>
-          </form>
-          <form id="unlock-form" class="subform">
-            <div class="drop-zone" data-zone="unlock">Drop one PDF (Unlock)</div>
-            <div id="unlock-preview" class="preview"></div>
-            <label>Password</label>
-            <input name="password" type="password" required />
-            <button type="submit">Unlock PDF</button>
           </form>
         </article>
 

@@ -5,7 +5,6 @@ Quality-focused PDF and image processing web app inspired by iLovePDF workflows.
 ## Features
 
 - PDF: merge, split by ranges, extract pages, rotate pages
-- PDF optional: compress, password protect, unlock (requires `qpdf` in `PATH`)
 - Images: JPG/PNG/WEBP -> merged PDF or per-image PDF (ZIP)
 - PDF -> images (PNG/JPG) with DPI control and page selection
 - Image format conversion: JPG/PNG/WEBP batch conversion with quality controls
@@ -13,7 +12,7 @@ Quality-focused PDF and image processing web app inspired by iLovePDF workflows.
 
 ## Quality and Integrity Defaults
 
-- No implicit compression; compression runs only on explicit user action
+- No implicit compression in the active PDF workflows
 - PDF merge/split/extract/rotate preserve vector content (no rasterization)
 - Images are embedded using original dimensions and DPI metadata (when present)
 - No database storage; temp files are removed after download
@@ -31,16 +30,6 @@ npm start
 ```
 
 Open `http://localhost:3000`.
-
-## Optional Dependency (`qpdf`)
-
-The following endpoints require `qpdf`:
-
-- `POST /api/pdf/compress`
-- `POST /api/pdf/protect`
-- `POST /api/pdf/unlock`
-
-If `qpdf` is not installed, these endpoints return `501` with a clear message.
 
 ## Limits
 

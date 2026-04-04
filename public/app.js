@@ -3,9 +3,6 @@
   splitFile: null,
   extractFile: null,
   rotateFile: null,
-  compressFile: null,
-  protectFile: null,
-  unlockFile: null,
   imageToPdfFiles: [],
   pdfToImagesFile: null,
   imageConvertFiles: [],
@@ -36,9 +33,6 @@ const ZONE_CONFIG = {
   split: { multiple: false, accept: ".pdf", filter: isPdfFile },
   extract: { multiple: false, accept: ".pdf", filter: isPdfFile },
   rotate: { multiple: false, accept: ".pdf", filter: isPdfFile },
-  compress: { multiple: false, accept: ".pdf", filter: isPdfFile },
-  protect: { multiple: false, accept: ".pdf", filter: isPdfFile },
-  unlock: { multiple: false, accept: ".pdf", filter: isPdfFile },
   imageToPdf: { multiple: true, accept: ".jpg,.jpeg,.png,.webp", filter: isImageFile },
   pdfToImages: { multiple: false, accept: ".pdf", filter: isPdfFile },
   imageConvert: { multiple: true, accept: ".jpg,.jpeg,.png,.webp", filter: isImageFile }
@@ -235,9 +229,6 @@ function getSelectedFiles() {
     state.splitFile,
     state.extractFile,
     state.rotateFile,
-    state.compressFile,
-    state.protectFile,
-    state.unlockFile,
     state.pdfToImagesFile
   ].filter(Boolean);
 
@@ -637,30 +628,6 @@ initializeDropZone("rotate", (files) => {
   setOperation("No active task");
 });
 
-initializeDropZone("compress", (files) => {
-  state.compressFile = files[0] || null;
-  renderSinglePreview("compress-preview", state.compressFile);
-  clearDownload();
-  setStatus("Compression source updated.", 0);
-  setOperation("No active task");
-});
-
-initializeDropZone("protect", (files) => {
-  state.protectFile = files[0] || null;
-  renderSinglePreview("protect-preview", state.protectFile);
-  clearDownload();
-  setStatus("Protect source updated.", 0);
-  setOperation("No active task");
-});
-
-initializeDropZone("unlock", (files) => {
-  state.unlockFile = files[0] || null;
-  renderSinglePreview("unlock-preview", state.unlockFile);
-  clearDownload();
-  setStatus("Unlock source updated.", 0);
-  setOperation("No active task");
-});
-
 initializeDropZone("imageToPdf", (files) => {
   if (!files.length) {
     return;
@@ -749,45 +716,6 @@ document.getElementById("rotate-form").addEventListener("submit", async (event) 
   formData.append("__operationLabel", "Rotate Pages");
   formData.append("file", state.rotateFile);
   await runOperation("/api/pdf/rotate", formData);
-});
-
-document.getElementById("compress-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (!state.compressFile) {
-    setStatus("Select one PDF for compression.", 0);
-    showToast("A source PDF is required.", "error");
-    return;
-  }
-  const formData = new FormData(event.currentTarget);
-  formData.append("__operationLabel", "Compress PDF");
-  formData.append("file", state.compressFile);
-  await runOperation("/api/pdf/compress", formData);
-});
-
-document.getElementById("protect-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (!state.protectFile) {
-    setStatus("Select one PDF to protect.", 0);
-    showToast("A source PDF is required.", "error");
-    return;
-  }
-  const formData = new FormData(event.currentTarget);
-  formData.append("__operationLabel", "Protect PDF");
-  formData.append("file", state.protectFile);
-  await runOperation("/api/pdf/protect", formData);
-});
-
-document.getElementById("unlock-form").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (!state.unlockFile) {
-    setStatus("Select one PDF to unlock.", 0);
-    showToast("A source PDF is required.", "error");
-    return;
-  }
-  const formData = new FormData(event.currentTarget);
-  formData.append("__operationLabel", "Unlock PDF");
-  formData.append("file", state.unlockFile);
-  await runOperation("/api/pdf/unlock", formData);
 });
 
 document.getElementById("image-to-pdf-form").addEventListener("submit", async (event) => {

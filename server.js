@@ -9,7 +9,6 @@ const archiver = require("archiver");
 const sharp = require("sharp");
 const { PDFDocument, degrees } = require("pdf-lib");
 const { v4: uuidv4 } = require("uuid");
-const { spawnSync } = require("child_process");
 const { createCanvas, DOMMatrix, ImageData, Path2D } = require("@napi-rs/canvas");
 
 const app = express();
@@ -240,18 +239,6 @@ async function zipBuffers(entries, outputPath) {
   });
 }
 
-function qpdfAvailable() {
-  const probe = spawnSync("qpdf", ["--version"], { encoding: "utf8" });
-  return probe.status === 0;
-}
-
-function runQpdf(args) {
-  const result = spawnSync("qpdf", args, { encoding: "utf8" });
-  if (result.status !== 0) {
-    throw new Error(result.stderr || "qpdf processing failed.");
-  }
-}
-
 async function imageToSinglePagePdf(imagePath) {
   await assertImage(imagePath);
   const inputBuffer = await fsp.readFile(imagePath);
@@ -444,95 +431,6 @@ app.post("/api/pdf/rotate", upload.single("file"), async (req, res) => {
   } catch (err) {
     await cleanupFiles([filePath]);
     res.status(400).json({ error: err.message || "Failed to rotate pages." });
-  }
-});
-
-app.post("/api/pdf/compress", upload.single("file"), async (req, res) => {
-  const filePath = req.file?.path;
-  try {
-    if (!filePath) {
-      throw new Error("Please upload one PDF file.");
-    }
-    await assertPdf(filePath);
-    if (!qpdfAvailable()) {
-      res.status(501).json({
-        error: "Compression requires qpdf installed and available in PATH."
-      });
-      return;
-    }
-
-    const level = (req.body.level || "medium").toLowerCase();
-    const outPath = path.join(OUTPUT_DIR, `${Date.now()}-${uuidv4()}.pdf`);
-
-    const args = [];
-    if (level === "low") {
-      args.push("--stream-data=compress");
-    } else if (level === "high") {
-      args.push("--stream-data=compress", "--object-streams=generate", "--recompress-flate", "--compression-level=9");
-    } else {
-      args.push("--stream-data=compress", "--object-streams=generate");
-    }
-    args.push(filePath, outPath);
-
-    runQpdf(args);
-    sendDownload(res, outPath, "compressed.pdf", [filePath]);
-  } catch (err) {
-    await cleanupFiles([filePath]);
-    res.status(400).json({ error: err.message || "Failed to compress PDF." });
-  }
-});
-
-app.post("/api/pdf/protect", upload.single("file"), async (req, res) => {
-  const filePath = req.file?.path;
-  try {
-    if (!filePath) {
-      throw new Error("Please upload one PDF file.");
-    }
-    await assertPdf(filePath);
-    if (!qpdfAvailable()) {
-      res.status(501).json({
-        error: "Password protect requires qpdf installed and available in PATH."
-      });
-      return;
-    }
-
-    const password = String(req.body.password || "");
-    if (!password) {
-      throw new Error("Password is required.");
-    }
-    const outPath = path.join(OUTPUT_DIR, `${Date.now()}-${uuidv4()}.pdf`);
-    runQpdf(["--encrypt", password, password, "256", "--", filePath, outPath]);
-    sendDownload(res, outPath, "protected.pdf", [filePath]);
-  } catch (err) {
-    await cleanupFiles([filePath]);
-    res.status(400).json({ error: err.message || "Failed to protect PDF." });
-  }
-});
-
-app.post("/api/pdf/unlock", upload.single("file"), async (req, res) => {
-  const filePath = req.file?.path;
-  try {
-    if (!filePath) {
-      throw new Error("Please upload one PDF file.");
-    }
-    await assertPdf(filePath);
-    if (!qpdfAvailable()) {
-      res.status(501).json({
-        error: "Unlock requires qpdf installed and available in PATH."
-      });
-      return;
-    }
-
-    const password = String(req.body.password || "");
-    if (!password) {
-      throw new Error("Password is required.");
-    }
-    const outPath = path.join(OUTPUT_DIR, `${Date.now()}-${uuidv4()}.pdf`);
-    runQpdf(["--password=" + password, "--decrypt", filePath, outPath]);
-    sendDownload(res, outPath, "unlocked.pdf", [filePath]);
-  } catch (err) {
-    await cleanupFiles([filePath]);
-    res.status(400).json({ error: err.message || "Failed to unlock PDF." });
   }
 });
 
